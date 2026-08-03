@@ -1,9 +1,10 @@
+<!DOCTYPE html>
 <html lang="pt-BR"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Uma Taça a Dois — Sessão Especial</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&amp;family=Space+Mono:wght@400;700&amp;family=Libre+Baskerville:ital@0;1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Space+Mono:wght@400;700&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root{
     --paper:#F1E6D6;
@@ -246,14 +247,14 @@
   <h1>Encontre os ingressos</h1>
   <div class="sub" id="subtitle">Complete a sessão especial pra desbloquear o convite</div>
 
-  <div class="stage" id="stage" style="display: block;">
+  <div class="stage" id="stage">
     <div class="hud">
       <span>Pontos: <span id="score">0</span>/<span id="target">12</span></span>
-      <span>Tempo: <span id="time">13</span>s</span>
+      <span>Tempo: <span id="time">20</span>s</span>
     </div>
     <div class="target-hint">Encontre os ingressos 🎟️ escondidos entre os símbolos</div>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%;"></div></div>
-    <div class="arena" id="arena"><button class="hole" data-idx="0" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="1" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="2" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="3" data-icon="🧀" data-is-target="0"><span class="icon-pop">🧀</span></button><button class="hole" data-idx="4" data-icon="🍇" data-is-target="0"><span class="icon-pop">🍇</span></button><button class="hole" data-idx="5" data-icon="✨" data-is-target="0"><span class="icon-pop">✨</span></button><button class="hole" data-idx="6" data-icon="🕯️" data-is-target="0"><span class="icon-pop">🕯️</span></button><button class="hole" data-idx="7" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole active" data-idx="8" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="arena" id="arena"></div>
     <div class="overlay-msg" id="overlayMsg"></div>
     <button class="restart" id="restartBtn">Reiniciar</button>
   </div>
@@ -262,7 +263,7 @@
     <div class="ticket" id="ticket">
       <div class="stub"><span class="stub-text">CONVITE ESPECIAL</span></div>
       <div class="main">
-        <div class="row-top"><span>Nº 6767</span><span id="dateNow"></span></div>
+        <div class="row-top"><span>Nº 0725</span><span id="dateNow"></span></div>
         <h2>Uma sessão<br>para brindar</h2>
 
         <label for="nome">Para</label>
@@ -291,9 +292,9 @@
       <p id="resultText"></p>
       <div class="reply-box" id="replyBox">
         <label for="replyMsg">Sua resposta</label>
-        <textarea id="replyMsg">Aceito! ❤️</textarea>
+        <textarea id="replyMsg">Aceito! &#10084;&#65039;</textarea>
         <div class="actions">
-          <a class="stamp-btn wa-btn" id="waBtn" href="https://wa.me/5592995358393?text=Aceito!%20%F0%9F%92%9B" target="_blank" rel="noopener">Enviar resposta</a>
+          <a class="stamp-btn wa-btn" id="waBtn" href="#" target="_blank" rel="noopener">Enviar resposta</a>
         </div>
       </div>
     </div>
@@ -429,6 +430,12 @@
   const dateField = document.getElementById('dateField');
   const dateInput = document.getElementById('dateInput');
 
+  function formatDate(isoStr){
+    if(!isoStr) return '';
+    const [y,m,d] = isoStr.split('-');
+    return `dia ${d}/${m}`;
+  }
+
   document.getElementById('chips').addEventListener('click', (e)=>{
     const btn = e.target.closest('.chip');
     if(!btn) return;
@@ -436,22 +443,22 @@
     btn.classList.add('active');
     if(btn.dataset.v === 'custom'){
       dateField.classList.add('show');
-      quando = dateInput.value ? formatDate(dateInput.value) : '';
+      if(!dateInput.value){
+        const today = new Date();
+        dateInput.value = today.toISOString().split('T')[0];
+      }
+      quando = formatDate(dateInput.value);
     } else {
       dateField.classList.remove('show');
       quando = btn.dataset.v;
     }
+    updateWaLink();
   });
 
   dateInput.addEventListener('change', ()=>{
     quando = formatDate(dateInput.value);
+    updateWaLink();
   });
-
-  function formatDate(isoStr){
-    if(!isoStr) return '';
-    const [y,m,d] = isoStr.split('-');
-    return `dia ${d}/${m}`;
-  }
 
   document.getElementById('stampBtn').addEventListener('click', ()=>{
     document.getElementById('ticket').style.transform = 'rotate(-0.6deg)';
@@ -469,8 +476,9 @@
   const replyMsg = document.getElementById('replyMsg');
 
   function updateWaLink(){
-    const reply = replyMsg.value.trim() || 'Aceito! ❤️';
-    waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(reply)}`;
+    const reply = replyMsg.value.trim() || 'Aceito! \u2764\uFE0F';
+    const diaInfo = quando ? ` — bora ${quando}!` : '';
+    waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(reply + diaInfo)}`;
   }
   replyMsg.addEventListener('input', updateWaLink);
   updateWaLink();
@@ -479,6 +487,4 @@
 
   startGame();
 </script>
-
-
 </body></html>
