@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sessão a Dois — Convite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2E4C4;
+    --paper-dark:#E7D3A3;
+    --ink:#2B2118;
+    --maroon:#7C1F2E;
+    --maroon-dark:#5A1521;
+    --gold:#B8862F;
+    --stampred:#A8324A;
+    --bg:#1C1410;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(124,31,46,0.25), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(184,134,47,0.15), transparent 45%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+    font-family:'Space Mono', monospace;
+    color:var(--ink);
+  }
+  .wrap{
+    width:100%;
+    max-width:640px;
+  }
+  .eyebrow{
+    text-align:center;
+    color:var(--gold);
+    letter-spacing:0.35em;
+    font-size:11px;
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  .ticket{
+    position:relative;
+    display:flex;
+    background:var(--paper);
+    border-radius:6px;
+    box-shadow:0 25px 60px rgba(0,0,0,0.5);
+    overflow:hidden;
+    transition:transform 0.4s ease;
+  }
+  .ticket.stamped{transform:rotate(-0.6deg);}
+  .stub{
+    width:92px;
+    flex-shrink:0;
+    background:var(--paper-dark);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    border-right:2px dashed var(--maroon);
+  }
+  .stub::before, .stub::after{
+    content:"";
+    position:absolute;
+    left:-11px;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:var(--bg);
+  }
+  .stub::before{top:-11px;}
+  .stub::after{bottom:-11px;}
+  .stub-text{
+    font-family:'Bebas Neue', sans-serif;
+    letter-spacing:0.3em;
+    font-size:18px;
+    color:var(--maroon);
+    writing-mode:vertical-rl;
+    transform:rotate(180deg);
+    white-space:nowrap;
+  }
+  .main{
+    flex:1;
+    padding:28px 30px 26px;
+    position:relative;
+  }
+  .row-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:4px;
+    font-size:11px;
+    color:var(--maroon-dark);
+    letter-spacing:0.15em;
+  }
+  h1{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:40px;
+    letter-spacing:0.04em;
+    color:var(--maroon);
+    margin:2px 0 14px;
+    line-height:0.95;
+  }
+  label{
+    display:block;
+    font-size:10px;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    color:var(--maroon-dark);
+    margin-bottom:5px;
+    margin-top:14px;
+  }
+  input[type="text"], textarea{
+    width:100%;
+    border:none;
+    border-bottom:1.5px solid var(--maroon);
+    background:transparent;
+    font-family:'Libre Baskerville', serif;
+    font-size:15px;
+    color:var(--ink);
+    padding:4px 2px;
+    resize:none;
+  }
+  input[type="text"]:focus, textarea:focus{outline:none; border-bottom-color:var(--gold);}
+  textarea{min-height:52px; line-height:1.5;}
+  .chips{display:flex; gap:8px; flex-wrap:wrap;}
+  .chip{
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    padding:6px 12px;
+    border:1.5px solid var(--maroon);
+    border-radius:20px;
+    background:transparent;
+    color:var(--maroon-dark);
+    cursor:pointer;
+    transition:all 0.15s ease;
+  }
+  .chip.active{background:var(--maroon); color:var(--paper); border-color:var(--maroon);}
+  .actions{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:22px;
+  }
+  .code{font-size:10px; color:var(--maroon-dark); letter-spacing:0.1em;}
+  button.stamp-btn{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:16px;
+    letter-spacing:0.1em;
+    background:var(--maroon);
+    color:var(--paper);
+    border:none;
+    padding:11px 22px;
+    border-radius:4px;
+    cursor:pointer;
+    transition:transform 0.1s ease, background 0.2s ease;
+  }
+  button.stamp-btn:hover{background:var(--maroon-dark);}
+  button.stamp-btn:active{transform:scale(0.96);}
+  .stamp{
+    position:absolute;
+    top:26px;
+    right:24px;
+    width:104px;
+    height:104px;
+    border:4px solid var(--stampred);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--stampred);
+    font-family:'Bebas Neue', sans-serif;
+    font-size:16px;
+    letter-spacing:0.06em;
+    text-align:center;
+    line-height:1.15;
+    transform:rotate(-16deg) scale(2.4);
+    opacity:0;
+    pointer-events:none;
+    mix-blend-mode:multiply;
+    transition:transform 0.35s cubic-bezier(.2,1.4,.4,1), opacity 0.25s ease;
+  }
+  .stamp.show{opacity:0.88; transform:rotate(-16deg) scale(1);}
+  .result{
+    max-width:640px;
+    margin:18px auto 0;
+    background:var(--paper);
+    border-radius:8px;
+    padding:18px 22px;
+    display:none;
+    box-shadow:0 12px 30px rgba(0,0,0,0.35);
+  }
+  .result.show{display:block;}
+  .result p{
+    font-family:'Libre Baskerville', serif;
+    font-size:14px;
+    line-height:1.6;
+    color:var(--ink);
+    white-space:pre-wrap;
+    margin:0 0 12px;
+  }
+  .copy-btn{
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    background:transparent;
+    border:1.5px solid var(--maroon);
+    color:var(--maroon);
+    padding:8px 14px;
+    border-radius:4px;
+    cursor:pointer;
+  }
+  .copy-btn:hover{background:var(--maroon); color:var(--paper);}
+  .copy-btn.copied{background:var(--gold); border-color:var(--gold); color:var(--paper);}
+  @media (max-width:480px){
+    .stub{width:56px;}
+    .stub-text{font-size:13px;}
+    h1{font-size:30px;}
+    .main{padding:22px 18px 20px;}
+    .stamp{width:80px; height:80px; font-size:12px; top:18px; right:16px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Cinema Amazonas &middot; Sessão especial</div>
+  <div class="ticket" id="ticket">
+    <div class="stub"><span class="stub-text">ADMISSÃO ÚNICA</span></div>
+    <div class="main">
+      <div class="row-top"><span>Nº 0724</span><span id="dateNow"></span></div>
+      <h1>Convite<br>para um encontro</h1>
+
+      <label for="nome">Para</label>
+      <input type="text" id="nome" placeholder="nome dela" maxlength="30" value="Lais Shuki">
+
+      <label>Quando</label>
+      <div class="chips" id="chips">
+        <button class="chip active" data-v="hoje à noite">Hoje à noite</button>
+        <button class="chip" data-v="neste fim de semana">Fim de semana</button>
+      </div>
+
+      <label for="msg">Mensagem</label>
+      <textarea id="msg">topa um encontro comigo? escolho o lugar, você só precisa aparecer :)</textarea>
+
+      <div class="actions">
+        <span class="code">SESSÃO ÚNICA · NÃO TRANSFERÍVEL</span>
+        <button class="stamp-btn" id="stampBtn">Carimbar convite</button>
+      </div>
+    </div>
+    <div class="stamp" id="stamp">CONFIRMADO</div>
+  </div>
+
+  <div class="result" id="result">
+    <p id="resultText"></p>
+    <button class="copy-btn" id="copyBtn">Copiar mensagem</button>
+  </div>
+</div>
+
+<script>
+  document.getElementById('dateNow').textContent = new Date().toLocaleDateString('pt-BR');
+
+  let quando = 'hoje à noite';
+  document.getElementById('chips').addEventListener('click', (e)=>{
+    const btn = e.target.closest('.chip');
+    if(!btn) return;
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    quando = btn.dataset.v;
+  });
+
+  document.getElementById('stampBtn').addEventListener('click', ()=>{
+    const ticket = document.getElementById('ticket');
+    const stamp = document.getElementById('stamp');
+    ticket.classList.add('stamped');
+    stamp.classList.add('show');
+
+    const nome = document.getElementById('nome').value.trim() || 'você';
+    const msg = document.getElementById('msg').value.trim();
+    const texto = `${nome}, ${msg}${quando ? ' — que tal ' + quando + '?' : ''}`;
+
+    const resultBox = document.getElementById('result');
+    const resultText = document.getElementById('resultText');
+    resultText.textContent = texto;
+    setTimeout(()=>{ resultBox.classList.add('show'); }, 350);
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', async ()=>{
+    const text = document.getElementById('resultText').textContent;
+    const btn = document.getElementById('copyBtn');
+    try{
+      await navigator.clipboard.writeText(text);
+      btn.textContent = 'Copiado!';
+      btn.classList.add('copied');
+      setTimeout(()=>{ btn.textContent = 'Copiar mensagem'; btn.classList.remove('copied'); }, 1800);
+    }catch(err){
+      btn.textContent = 'Selecione e copie manualmente';
+    }
+  });
+</script>
+</body>
+</html>
