@@ -249,11 +249,11 @@
   <div class="stage" id="stage" style="display: block;">
     <div class="hud">
       <span>Pontos: <span id="score">0</span>/<span id="target">12</span></span>
-      <span>Tempo: <span id="time">13</span>s</span>
+      <span>Tempo: <span id="time">20</span>s</span>
     </div>
     <div class="target-hint">Encontre os ingressos 🎟️ escondidos entre os símbolos</div>
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%;"></div></div>
-    <div class="arena" id="arena"><button class="hole" data-idx="0" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="1" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="2" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="3" data-icon="🧀" data-is-target="0"><span class="icon-pop">🧀</span></button><button class="hole" data-idx="4" data-icon="🍇" data-is-target="0"><span class="icon-pop">🍇</span></button><button class="hole" data-idx="5" data-icon="✨" data-is-target="0"><span class="icon-pop">✨</span></button><button class="hole" data-idx="6" data-icon="🕯️" data-is-target="0"><span class="icon-pop">🕯️</span></button><button class="hole" data-idx="7" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole active" data-idx="8" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button></div>
+    <div class="arena" id="arena"><button class="hole" data-idx="0" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="1" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="2" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="3"><span class="icon-pop"></span></button><button class="hole" data-idx="4" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="5" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="6" data-icon="✨" data-is-target="0"><span class="icon-pop">✨</span></button><button class="hole" data-idx="7" data-icon="🍇" data-is-target="0"><span class="icon-pop">🍇</span></button><button class="hole" data-idx="8"><span class="icon-pop"></span></button></div>
     <div class="overlay-msg" id="overlayMsg"></div>
     <button class="restart" id="restartBtn">Reiniciar</button>
   </div>
@@ -293,7 +293,7 @@
         <label for="replyMsg">Sua resposta</label>
         <textarea id="replyMsg">Aceito! ❤️</textarea>
         <div class="actions">
-          <a class="stamp-btn wa-btn" id="waBtn" href="https://wa.me/5592995358393?text=Aceito!%20%E2%9D%A4%EF%B8%8F" target="_blank" rel="noopener">Enviar resposta</a>
+          <a class="stamp-btn wa-btn" id="waBtn" href="https://wa.me/5592995358393?text=Aceito!%20%E2%9D%A4%EF%B8%8F%20%E2%80%94%20bora%20hoje%20%C3%A0%20noite!" target="_blank" rel="noopener">Enviar resposta</a>
         </div>
       </div>
     </div>
@@ -436,7 +436,11 @@
     btn.classList.add('active');
     if(btn.dataset.v === 'custom'){
       dateField.classList.add('show');
-      quando = dateInput.value ? formatDate(dateInput.value) : '';
+      if(!dateInput.value){
+        const today = new Date();
+        dateInput.value = today.toISOString().split('T')[0];
+      }
+      quando = formatDate(dateInput.value);
     } else {
       dateField.classList.remove('show');
       quando = btn.dataset.v;
@@ -469,7 +473,7 @@
   const replyMsg = document.getElementById('replyMsg');
 
   function updateWaLink(){
-    const reply = replyMsg.value.trim() || 'Aceito! ❤️';
+    const reply = replyMsg.value.trim() || 'Aceito! \u2764\uFE0F';
     const diaInfo = quando ? ` — bora ${quando}!` : '';
     waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(reply + diaInfo)}`;
   }
@@ -482,6 +486,7 @@
 
   startGame();
 </script>
+
 
 
 </body></html>
