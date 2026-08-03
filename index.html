@@ -111,16 +111,18 @@
   .hole.active .icon-pop{transform:scale(1);}
   .hole.hit{background:var(--green);}
   .hole.miss{background:var(--red);}
- .restart{
-  background:#E6D4B8;
-  border:1.5px solid #5C1A2A;
-  color:#3C0F1B;
-}
-
-.restart:hover{
-  background:var(--wine-dark);
-  transform:translateY(-2px);
-}
+  .restart{
+    display:block;
+    margin:16px auto 0;
+    background:transparent;
+    border:1.5px solid var(--paper-dark);
+    color:var(--paper-dark);
+    font-family:'Libre Baskerville', serif;
+    font-size:11px;
+    padding:7px 14px;
+    border-radius:20px;
+    cursor:pointer;
+  }
   .overlay-msg{
     text-align:center;
     font-family:'Cormorant Garamond', serif;
@@ -247,11 +249,11 @@
   <div class="stage" id="stage" style="display: block;">
     <div class="hud">
       <span>Pontos: <span id="score">0</span>/<span id="target">12</span></span>
-      <span>Tempo: <span id="time">24</span>s</span>
+      <span>Tempo: <span id="time">13</span>s</span>
     </div>
     <div class="target-hint">Encontre os ingressos 🎟️ escondidos entre os símbolos</div>
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%;"></div></div>
-    <div class="arena" id="arena"><button class="hole" data-idx="0" data-icon="✨" data-is-target="0"><span class="icon-pop">✨</span></button><button class="hole" data-idx="1" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="2"><span class="icon-pop"></span></button><button class="hole active" data-idx="3" data-icon="🌙" data-is-target="0"><span class="icon-pop">🌙</span></button><button class="hole" data-idx="4" data-icon="🍿" data-is-target="0"><span class="icon-pop">🍿</span></button><button class="hole" data-idx="5" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="6"><span class="icon-pop"></span></button><button class="hole" data-idx="7"><span class="icon-pop"></span></button><button class="hole" data-idx="8"><span class="icon-pop"></span></button></div>
+    <div class="arena" id="arena"><button class="hole" data-idx="0" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="1" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="2" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="3" data-icon="🧀" data-is-target="0"><span class="icon-pop">🧀</span></button><button class="hole" data-idx="4" data-icon="🍇" data-is-target="0"><span class="icon-pop">🍇</span></button><button class="hole" data-idx="5" data-icon="✨" data-is-target="0"><span class="icon-pop">✨</span></button><button class="hole" data-idx="6" data-icon="🕯️" data-is-target="0"><span class="icon-pop">🕯️</span></button><button class="hole" data-idx="7" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole active" data-idx="8" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button></div>
     <div class="overlay-msg" id="overlayMsg"></div>
     <button class="restart" id="restartBtn">Reiniciar</button>
   </div>
@@ -289,7 +291,7 @@
       <p id="resultText"></p>
       <div class="reply-box" id="replyBox">
         <label for="replyMsg">Sua resposta</label>
-        <textarea id="replyMsg">Aceito! ❤️</textarea>
+        <textarea id="replyMsg">Aceito! 💛</textarea>
         <div class="actions">
           <a class="stamp-btn wa-btn" id="waBtn" href="https://wa.me/5592995358393?text=Aceito!%20%F0%9F%92%9B" target="_blank" rel="noopener">Enviar resposta</a>
         </div>
@@ -467,7 +469,7 @@
   const replyMsg = document.getElementById('replyMsg');
 
   function updateWaLink(){
-    const reply = replyMsg.value.trim() || 'Aceito! ❤️';
+    const reply = replyMsg.value.trim() || 'Aceito! 💛';
     waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(reply)}`;
   }
   replyMsg.addEventListener('input', updateWaLink);
