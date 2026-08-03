@@ -1,21 +1,19 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
+<html lang="pt-BR"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sessão Bônus — Reflexo</title>
+<title>Uma Taça a Dois — Sessão Especial</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&amp;family=Space+Mono:wght@400;700&amp;family=Libre+Baskerville:ital@0;1&amp;display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#F2E4C4;
-    --paper-dark:#E7D3A3;
-    --ink:#2B2118;
-    --maroon:#7C1F2E;
-    --maroon-dark:#5A1521;
-    --gold:#B8862F;
-    --stampred:#A8324A;
-    --bg:#1C1410;
+    --paper:#F1E6D6;
+    --paper-dark:#E6D4B8;
+    --ink:#2E2016;
+    --maroon:#5C1A2A;
+    --maroon-dark:#3C0F1B;
+    --gold:#B98A46;
+    --stampred:#7A1220;
+    --bg:#150C0E;
     --green:#2E7D4F;
     --red:#A8324A;
   }
@@ -31,7 +29,7 @@
     align-items:center;
     justify-content:center;
     padding:32px 16px;
-    font-family:'Space Mono', monospace;
+    font-family:'Libre Baskerville', serif;
     color:var(--ink);
   }
   .wrap{width:100%; max-width:460px;}
@@ -44,7 +42,8 @@
     margin-bottom:10px;
   }
   h1{
-    font-family:'Bebas Neue', sans-serif;
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
     font-size:34px;
     letter-spacing:0.03em;
     color:var(--paper);
@@ -118,7 +117,7 @@
     background:transparent;
     border:1.5px solid var(--paper-dark);
     color:var(--paper-dark);
-    font-family:'Space Mono', monospace;
+    font-family:'Libre Baskerville', serif;
     font-size:11px;
     padding:7px 14px;
     border-radius:20px;
@@ -126,7 +125,8 @@
   }
   .overlay-msg{
     text-align:center;
-    font-family:'Bebas Neue', sans-serif;
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
     font-size:20px;
     color:var(--maroon);
     margin-top:14px;
@@ -154,7 +154,8 @@
     border-right:2px dashed var(--maroon);
   }
   .stub-text{
-    font-family:'Bebas Neue', sans-serif;
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
     letter-spacing:0.3em;
     font-size:15px;
     color:var(--maroon);
@@ -168,7 +169,8 @@
     font-size:10px; color:var(--maroon-dark); letter-spacing:0.12em; margin-bottom:4px;
   }
   .ticket h2{
-    font-family:'Bebas Neue', sans-serif;
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
     font-size:30px;
     color:var(--maroon);
     margin:2px 0 12px;
@@ -187,7 +189,7 @@
   textarea{min-height:46px; line-height:1.5;}
   .chips{display:flex; gap:7px; flex-wrap:wrap;}
   .chip{
-    font-family:'Space Mono', monospace; font-size:11px; padding:5px 10px;
+    font-family:'Libre Baskerville', serif; font-size:11px; padding:5px 10px;
     border:1.5px solid var(--maroon); border-radius:20px; background:transparent;
     color:var(--maroon-dark); cursor:pointer;
   }
@@ -202,7 +204,8 @@
   input[type="date"]:focus{outline:none; border-bottom-color:var(--gold);}
   .actions{display:flex; justify-content:flex-end; margin-top:18px;}
   button.stamp-btn{
-    font-family:'Bebas Neue', sans-serif; font-size:15px; letter-spacing:0.1em;
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic; font-size:15px; letter-spacing:0.1em;
     background:var(--maroon); color:var(--paper); border:none;
     padding:10px 20px; border-radius:4px; cursor:pointer;
   }
@@ -211,7 +214,8 @@
     position:absolute; top:20px; right:20px; width:86px; height:86px;
     border:4px solid var(--stampred); border-radius:50%;
     display:flex; align-items:center; justify-content:center;
-    color:var(--stampred); font-family:'Bebas Neue', sans-serif; font-size:14px;
+    color:var(--stampred); font-family:'Cormorant Garamond', serif;
+    font-style:italic; font-size:14px;
     text-align:center; line-height:1.1; transform:rotate(-16deg) scale(2.2);
     opacity:0; pointer-events:none; mix-blend-mode:multiply;
     transition:transform 0.35s cubic-bezier(.2,1.4,.4,1), opacity 0.25s ease;
@@ -230,7 +234,7 @@
   .reply-box .actions{margin-top:12px; justify-content:center;}
   button.wa-btn{
     background:#25D366; color:#0A2E1B;
-    font-family:'Space Mono', monospace; font-weight:700;
+    font-family:'Libre Baskerville', serif; font-weight:700;
     font-size:12.5px; letter-spacing:0.04em; padding:11px 22px;
   }
   button.wa-btn:hover{background:#1EBE5A;}
@@ -238,28 +242,28 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="eyebrow">Cinema Amazonas &middot; Sessão Bônus</div>
-  <h1>Toque rápido</h1>
-  <div class="sub" id="subtitle">Acerte os ingressos 🎟️ antes que sumam pra liberar o próximo convite</div>
+  <div class="eyebrow">Adega Particular · Convite Especial</div>
+  <h1>Encontre os ingressos</h1>
+  <div class="sub" id="subtitle">Complete a sessão especial pra desbloquear o convite</div>
 
-  <div class="stage" id="stage">
+  <div class="stage" id="stage" style="display: block;">
     <div class="hud">
       <span>Pontos: <span id="score">0</span>/<span id="target">12</span></span>
-      <span>Tempo: <span id="time">30</span>s</span>
+      <span>Tempo: <span id="time">24</span>s</span>
     </div>
-    <div class="target-hint">Toque só no <span class="icon">🎟️</span> — evite os outros ícones</div>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="arena" id="arena"></div>
+    <div class="target-hint">Encontre os ingressos 🎟️ escondidos entre os símbolos</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%;"></div></div>
+    <div class="arena" id="arena"><button class="hole" data-idx="0" data-icon="✨" data-is-target="0"><span class="icon-pop">✨</span></button><button class="hole" data-idx="1" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="2"><span class="icon-pop"></span></button><button class="hole active" data-idx="3" data-icon="🌙" data-is-target="0"><span class="icon-pop">🌙</span></button><button class="hole" data-idx="4" data-icon="🍿" data-is-target="0"><span class="icon-pop">🍿</span></button><button class="hole" data-idx="5" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="6"><span class="icon-pop"></span></button><button class="hole" data-idx="7"><span class="icon-pop"></span></button><button class="hole" data-idx="8"><span class="icon-pop"></span></button></div>
     <div class="overlay-msg" id="overlayMsg"></div>
     <button class="restart" id="restartBtn">Reiniciar</button>
   </div>
 
   <div class="ticket-wrap" id="ticketWrap">
     <div class="ticket" id="ticket">
-      <div class="stub"><span class="stub-text">SESSÃO BÔNUS</span></div>
+      <div class="stub"><span class="stub-text">CONVITE ESPECIAL</span></div>
       <div class="main">
         <div class="row-top"><span>Nº 0725</span><span id="dateNow"></span></div>
-        <h2>Novo pedido<br>de encontro</h2>
+        <h2>Uma sessão<br>para brindar</h2>
 
         <label for="nome">Para</label>
         <input type="text" id="nome" placeholder="nome dela" maxlength="30" value="Lais Shuki">
@@ -275,13 +279,13 @@
         </div>
 
         <label for="msg">Mensagem</label>
-        <textarea id="msg">você teve o reflexo mais rápido do cinema, agora só falta topar mais um encontro comigo :)</textarea>
+        <textarea id="msg">você encontrou os ingressos, agora só falta brindar uma taça de vinho comigo :)</textarea>
 
         <div class="actions">
           <button class="stamp-btn" id="stampBtn">Carimbar convite</button>
         </div>
       </div>
-      <div class="stamp" id="stamp">CONFIRMADO</div>
+      <div class="stamp" id="stamp">SELADO<br>COM VINHO</div>
     </div>
     <div class="result" id="result">
       <p id="resultText"></p>
@@ -289,7 +293,7 @@
         <label for="replyMsg">Sua resposta</label>
         <textarea id="replyMsg">Aceito! 💛</textarea>
         <div class="actions">
-          <a class="stamp-btn wa-btn" id="waBtn" href="#" target="_blank" rel="noopener">Enviar resposta</a>
+          <a class="stamp-btn wa-btn" id="waBtn" href="https://wa.me/5592995358393?text=Aceito!%20%F0%9F%92%9B" target="_blank" rel="noopener">Enviar resposta</a>
         </div>
       </div>
     </div>
@@ -298,7 +302,7 @@
 
 <script>
   const TARGET_ICON = '🎟️';
-  const DISTRACTORS = ['🍿','🎬','🍷','✨','🎡','💌','🌙'];
+  const DISTRACTORS = ['🍇','🍷','🕯️','✨','🧀','🌙','🥖'];
   const CELLS = 9;
   const WIN_SCORE = 12;
   const TIME_LIMIT = 30;
@@ -332,7 +336,7 @@
     document.getElementById('overlayMsg').classList.remove('show');
     document.getElementById('stage').style.display = 'block';
     document.getElementById('ticketWrap').classList.remove('show');
-    document.getElementById('subtitle').textContent = 'Acerte os ingressos 🎟️ antes que sumam pra liberar o próximo convite';
+    document.getElementById('subtitle').textContent = 'Complete a sessão especial pra desbloquear o convite';
     buildArena();
     timerInterval = setInterval(tick, 1000);
     scheduleSpawn(300);
@@ -475,5 +479,6 @@
 
   startGame();
 </script>
-</body>
-</html>
+
+
+</body></html>
