@@ -469,7 +469,7 @@
   const replyMsg = document.getElementById('replyMsg');
 
   function updateWaLink(){
-    const reply = replyMsg.value.trim() || 'Aceito! 💛';
+    const reply = replyMsg.value.trim() || 'Aceito! ❤️';
     waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(reply)}`;
   }
   replyMsg.addEventListener('input', updateWaLink);
