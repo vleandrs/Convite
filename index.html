@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sessão Bônus — Jogo da Memória</title>
+<title>Sessão Bônus — Reflexo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
 <style>
@@ -16,6 +16,8 @@
     --gold:#B8862F;
     --stampred:#A8324A;
     --bg:#1C1410;
+    --green:#2E7D4F;
+    --red:#A8324A;
   }
   *{box-sizing:border-box;}
   body{
@@ -69,58 +71,47 @@
     font-size:11px;
     letter-spacing:0.1em;
     color:var(--maroon-dark);
-    margin-bottom:14px;
+    margin-bottom:6px;
     text-transform:uppercase;
   }
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(4, 1fr);
-    gap:9px;
+  .target-hint{
+    text-align:center;
+    font-size:11px;
+    color:var(--maroon-dark);
+    margin-bottom:12px;
+    letter-spacing:0.04em;
   }
-  .card{
+  .target-hint .icon{font-size:16px; vertical-align:middle;}
+  .progress-bar{
+    height:6px; background:var(--paper-dark); border-radius:4px; overflow:hidden; margin-bottom:14px;
+  }
+  .progress-fill{
+    height:100%; background:var(--gold); width:0%; transition:width 0.2s ease;
+  }
+  .arena{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    grid-template-rows:repeat(3, 1fr);
+    gap:9px;
     aspect-ratio:1;
-    border-radius:8px;
+  }
+  .hole{
+    border-radius:10px;
     border:none;
     cursor:pointer;
-    position:relative;
-    perspective:600px;
-    background:transparent;
-    padding:0;
-  }
-  .card-inner{
-    width:100%; height:100%;
-    position:relative;
-    transform-style:preserve-3d;
-    transition:transform 0.35s ease;
-  }
-  .card.flipped .card-inner, .card.matched .card-inner{transform:rotateY(180deg);}
-  .face{
-    position:absolute; inset:0;
-    border-radius:8px;
-    display:flex; align-items:center; justify-content:center;
-    backface-visibility:hidden;
-  }
-  .face-back{
-    background:var(--maroon);
-    background-image:repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0 6px, transparent 6px 12px);
-    border:2px solid var(--maroon-dark);
-  }
-  .face-back::after{
-    content:"🎞";
-    font-size:20px;
-    opacity:0.5;
-  }
-  .face-front{
     background:var(--paper-dark);
-    border:2px solid var(--maroon);
-    transform:rotateY(180deg);
-    font-size:26px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:30px;
+    position:relative;
+    overflow:hidden;
   }
-  .card.matched .face-front{
-    background:var(--gold);
-    border-color:var(--gold);
-    opacity:0.9;
+  .hole .icon-pop{
+    transform:scale(0);
+    transition:transform 0.15s cubic-bezier(.3,1.5,.4,1);
   }
+  .hole.active .icon-pop{transform:scale(1);}
+  .hole.hit{background:var(--green);}
+  .hole.miss{background:var(--red);}
   .restart{
     display:block;
     margin:16px auto 0;
@@ -133,6 +124,15 @@
     border-radius:20px;
     cursor:pointer;
   }
+  .overlay-msg{
+    text-align:center;
+    font-family:'Bebas Neue', sans-serif;
+    font-size:20px;
+    color:var(--maroon);
+    margin-top:14px;
+    display:none;
+  }
+  .overlay-msg.show{display:block;}
 
   /* Ticket reveal */
   .ticket-wrap{display:none;}
@@ -234,24 +234,23 @@
     font-size:12.5px; letter-spacing:0.04em; padding:11px 22px;
   }
   button.wa-btn:hover{background:#1EBE5A;}
-  .wa-sent{
-    text-align:center; font-family:'Space Mono', monospace; font-size:11px;
-    color:var(--maroon-dark); margin-top:8px; opacity:0.75;
-  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="eyebrow">Cinema Amazonas &middot; Sessão Bônus</div>
-  <h1>Ache os pares</h1>
-  <div class="sub" id="subtitle">Complete o jogo da memória pra liberar o próximo convite</div>
+  <h1>Toque rápido</h1>
+  <div class="sub" id="subtitle">Acerte os ingressos 🎟️ antes que sumam pra liberar o próximo convite</div>
 
   <div class="stage" id="stage">
     <div class="hud">
-      <span>Jogadas: <span id="moves">0</span></span>
-      <span id="pairsLeft">0/8 pares</span>
+      <span>Pontos: <span id="score">0</span>/<span id="target">12</span></span>
+      <span>Tempo: <span id="time">20</span>s</span>
     </div>
-    <div class="grid" id="grid"></div>
+    <div class="target-hint">Toque só no <span class="icon">🎟️</span> — evite os outros ícones</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="arena" id="arena"></div>
+    <div class="overlay-msg" id="overlayMsg"></div>
     <button class="restart" id="restartBtn">Reiniciar</button>
   </div>
 
@@ -276,7 +275,7 @@
         </div>
 
         <label for="msg">Mensagem</label>
-        <textarea id="msg">você desvendou o jogo, agora só falta topar mais um encontro comigo :)</textarea>
+        <textarea id="msg">você teve o reflexo mais rápido do cinema, agora só falta topar mais um encontro comigo :)</textarea>
 
         <div class="actions">
           <button class="stamp-btn" id="stampBtn">Carimbar convite</button>
@@ -298,71 +297,125 @@
 </div>
 
 <script>
-  const ICONS = ['🎬','🍿','🎟️','💌','🌙','✨','🎡','🍷'];
-  let deck = [], flipped = [], matchedCount = 0, moves = 0, lock = false;
+  const TARGET_ICON = '🎟️';
+  const DISTRACTORS = ['🍿','🎬','🍷','✨','🎡','💌','🌙'];
+  const CELLS = 9;
+  const WIN_SCORE = 12;
+  const TIME_LIMIT = 20;
+  const VISIBLE_MS = 700;
+  const GAP_MS = 220;
 
-  function shuffle(arr){
-    for(let i=arr.length-1;i>0;i--){
-      const j = Math.floor(Math.random()*(i+1));
-      [arr[i],arr[j]]=[arr[j],arr[i]];
+  let score = 0, timeLeft = TIME_LIMIT, gameOver = false;
+  let timerInterval = null, spawnTimeoutA = null, spawnTimeoutB = null, activeIndex = -1;
+
+  function buildArena(){
+    const arena = document.getElementById('arena');
+    arena.innerHTML = '';
+    for(let i=0;i<CELLS;i++){
+      const hole = document.createElement('button');
+      hole.className = 'hole';
+      hole.dataset.idx = i;
+      hole.innerHTML = `<span class="icon-pop"></span>`;
+      hole.addEventListener('click', ()=>onHit(i));
+      arena.appendChild(hole);
     }
-    return arr;
   }
 
-  function buildGrid(){
-    deck = shuffle([...ICONS, ...ICONS]);
-    flipped = []; matchedCount = 0; moves = 0; lock = false;
-    document.getElementById('moves').textContent = moves;
-    document.getElementById('pairsLeft').textContent = `0/${ICONS.length} pares`;
+  function startGame(){
+    score = 0; timeLeft = TIME_LIMIT; gameOver = false; activeIndex = -1;
+    clearInterval(timerInterval);
+    clearTimeout(spawnTimeoutA);
+    clearTimeout(spawnTimeoutB);
+    document.getElementById('score').textContent = score;
+    document.getElementById('time').textContent = timeLeft;
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('overlayMsg').classList.remove('show');
     document.getElementById('stage').style.display = 'block';
     document.getElementById('ticketWrap').classList.remove('show');
-    document.getElementById('subtitle').textContent = 'Complete o jogo da memória pra liberar o próximo convite';
-
-    const grid = document.getElementById('grid');
-    grid.innerHTML = '';
-    deck.forEach((icon, idx)=>{
-      const card = document.createElement('button');
-      card.className = 'card';
-      card.dataset.icon = icon;
-      card.dataset.idx = idx;
-      card.innerHTML = `
-        <div class="card-inner">
-          <div class="face face-back"></div>
-          <div class="face face-front">${icon}</div>
-        </div>`;
-      card.addEventListener('click', ()=>onFlip(card));
-      grid.appendChild(card);
-    });
+    document.getElementById('subtitle').textContent = 'Acerte os ingressos 🎟️ antes que sumam pra liberar o próximo convite';
+    buildArena();
+    timerInterval = setInterval(tick, 1000);
+    scheduleSpawn(300);
   }
 
-  function onFlip(card){
-    if(lock || card.classList.contains('flipped') || card.classList.contains('matched')) return;
-    card.classList.add('flipped');
-    flipped.push(card);
-    if(flipped.length === 2){
-      moves++;
-      document.getElementById('moves').textContent = moves;
-      lock = true;
-      const [a,b] = flipped;
-      if(a.dataset.icon === b.dataset.icon){
-        a.classList.add('matched'); b.classList.add('matched');
-        matchedCount++;
-        document.getElementById('pairsLeft').textContent = `${matchedCount}/${ICONS.length} pares`;
-        flipped = []; lock = false;
-        if(matchedCount === ICONS.length){
-          setTimeout(revealTicket, 500);
-        }
-      } else {
-        setTimeout(()=>{
-          a.classList.remove('flipped'); b.classList.remove('flipped');
-          flipped = []; lock = false;
-        }, 700);
+  function tick(){
+    timeLeft--;
+    document.getElementById('time').textContent = Math.max(timeLeft, 0);
+    if(timeLeft <= 0){
+      endGame(false);
+    }
+  }
+
+  function scheduleSpawn(delay){
+    spawnTimeoutA = setTimeout(spawnIcon, delay);
+  }
+
+  function spawnIcon(){
+    if(gameOver) return;
+    const holes = document.querySelectorAll('.hole');
+    holes.forEach(h=>{ h.classList.remove('hit','miss'); });
+    const idx = Math.floor(Math.random()*CELLS);
+    activeIndex = idx;
+    const isTarget = Math.random() < 0.5;
+    const icon = isTarget ? TARGET_ICON : DISTRACTORS[Math.floor(Math.random()*DISTRACTORS.length)];
+    const hole = holes[idx];
+    hole.dataset.icon = icon;
+    hole.dataset.isTarget = isTarget ? '1' : '0';
+    hole.querySelector('.icon-pop').textContent = icon;
+    hole.classList.add('active');
+
+    spawnTimeoutB = setTimeout(()=>{
+      if(gameOver) return;
+      hole.classList.remove('active');
+      activeIndex = -1;
+      scheduleSpawn(GAP_MS);
+    }, VISIBLE_MS);
+  }
+
+  function onHit(idx){
+    if(gameOver) return;
+    if(idx !== activeIndex) return;
+    const holes = document.querySelectorAll('.hole');
+    const hole = holes[idx];
+    const wasTarget = hole.dataset.isTarget === '1';
+    clearTimeout(spawnTimeoutB);
+    hole.classList.remove('active');
+    activeIndex = -1;
+
+    if(wasTarget){
+      score++;
+      document.getElementById('score').textContent = score;
+      document.getElementById('progressFill').style.width = `${Math.min(100, (score/WIN_SCORE)*100)}%`;
+      hole.classList.add('hit');
+      if(score >= WIN_SCORE){
+        endGame(true);
+        return;
       }
+    } else {
+      hole.classList.add('miss');
+      timeLeft = Math.max(0, timeLeft - 1);
+      document.getElementById('time').textContent = timeLeft;
+    }
+    scheduleSpawn(GAP_MS);
+  }
+
+  function endGame(won){
+    gameOver = true;
+    clearInterval(timerInterval);
+    clearTimeout(spawnTimeoutA);
+    clearTimeout(spawnTimeoutB);
+    document.querySelectorAll('.hole').forEach(h=>h.classList.remove('active'));
+    if(won){
+      setTimeout(revealTicket, 500);
+    } else {
+      const msg = document.getElementById('overlayMsg');
+      msg.textContent = `Quase! ${score}/${WIN_SCORE} — tenta de novo`;
+      msg.classList.add('show');
     }
   }
 
   function revealTicket(){
-    document.getElementById('subtitle').textContent = 'Você achou todos os pares! Convite liberado 🎉';
+    document.getElementById('subtitle').textContent = 'Reflexo em dia! Convite liberado 🎉';
     document.getElementById('stage').style.display = 'none';
     document.getElementById('ticketWrap').classList.add('show');
     document.getElementById('dateNow').textContent = new Date().toLocaleDateString('pt-BR');
@@ -418,9 +471,9 @@
   replyMsg.addEventListener('input', updateWaLink);
   updateWaLink();
 
-  document.getElementById('restartBtn').addEventListener('click', buildGrid);
+  document.getElementById('restartBtn').addEventListener('click', startGame);
 
-  buildGrid();
+  startGame();
 </script>
 </body>
 </html>
