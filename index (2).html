@@ -1,0 +1,484 @@
+<html lang="pt-BR"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uma Taça a Dois — Sessão Especial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&amp;family=Space+Mono:wght@400;700&amp;family=Libre+Baskerville:ital@0;1&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1E6D6;
+    --paper-dark:#E6D4B8;
+    --ink:#2E2016;
+    --maroon:#5C1A2A;
+    --maroon-dark:#3C0F1B;
+    --gold:#B98A46;
+    --stampred:#7A1220;
+    --bg:#150C0E;
+    --green:#2E7D4F;
+    --red:#A8324A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(124,31,46,0.25), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(184,134,47,0.15), transparent 45%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+    font-family:'Libre Baskerville', serif;
+    color:var(--ink);
+  }
+  .wrap{width:100%; max-width:460px;}
+  .eyebrow{
+    text-align:center;
+    color:var(--gold);
+    letter-spacing:0.3em;
+    font-size:11px;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  h1{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:34px;
+    letter-spacing:0.03em;
+    color:var(--paper);
+    text-align:center;
+    margin:0 0 4px;
+    line-height:0.95;
+  }
+  .sub{
+    text-align:center;
+    color:var(--paper-dark);
+    font-size:12px;
+    margin-bottom:22px;
+    opacity:0.85;
+  }
+  .stage{
+    background:var(--paper);
+    border-radius:10px;
+    padding:22px;
+    box-shadow:0 25px 60px rgba(0,0,0,0.5);
+  }
+  .hud{
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    letter-spacing:0.1em;
+    color:var(--maroon-dark);
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .target-hint{
+    text-align:center;
+    font-size:11px;
+    color:var(--maroon-dark);
+    margin-bottom:12px;
+    letter-spacing:0.04em;
+  }
+  .target-hint .icon{font-size:16px; vertical-align:middle;}
+  .progress-bar{
+    height:6px; background:var(--paper-dark); border-radius:4px; overflow:hidden; margin-bottom:14px;
+  }
+  .progress-fill{
+    height:100%; background:var(--gold); width:0%; transition:width 0.2s ease;
+  }
+  .arena{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    grid-template-rows:repeat(3, 1fr);
+    gap:9px;
+    aspect-ratio:1;
+  }
+  .hole{
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+    background:var(--paper-dark);
+    display:flex; align-items:center; justify-content:center;
+    font-size:30px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hole .icon-pop{
+    transform:scale(0);
+    transition:transform 0.15s cubic-bezier(.3,1.5,.4,1);
+  }
+  .hole.active .icon-pop{transform:scale(1);}
+  .hole.hit{background:var(--green);}
+  .hole.miss{background:var(--red);}
+  .restart{
+    display:block;
+    margin:16px auto 0;
+    background:transparent;
+    border:1.5px solid var(--paper-dark);
+    color:#895129;
+    font-family:'Libre Baskerville', serif;
+    font-size:11px;
+    padding:7px 14px;
+    border-radius:20px;
+    cursor:pointer;
+  }
+  .overlay-msg{
+    text-align:center;
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:20px;
+    color: #895129;
+    margin-top:14px;
+    display:none;
+  }
+  .overlay-msg.show{display:block;}
+
+  /* Ticket reveal */
+  .ticket-wrap{display:none;}
+  .ticket-wrap.show{display:block; animation:fadein 0.5s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+  .ticket{
+    position:relative;
+    display:flex;
+    background:var(--paper);
+    border-radius:6px;
+    box-shadow:0 25px 60px rgba(0,0,0,0.5);
+    overflow:hidden;
+  }
+  .stub{
+    width:80px;
+    flex-shrink:0;
+    background:var(--paper-dark);
+    display:flex; align-items:center; justify-content:center;
+    border-right:2px dashed var(--maroon);
+  }
+  .stub-text{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    letter-spacing:0.3em;
+    font-size:15px;
+    color:var(--maroon);
+    writing-mode:vertical-rl;
+    transform:rotate(180deg);
+    white-space:nowrap;
+  }
+  .main{flex:1; padding:22px 22px 20px; position:relative;}
+  .row-top{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-size:10px; color:var(--maroon-dark); letter-spacing:0.12em; margin-bottom:4px;
+  }
+  .ticket h2{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:30px;
+    color:var(--maroon);
+    margin:2px 0 12px;
+    line-height:0.95;
+  }
+  label{
+    display:block; font-size:9px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--maroon-dark); margin-bottom:4px; margin-top:12px;
+  }
+  input[type="text"], textarea{
+    width:100%; border:none; border-bottom:1.5px solid var(--maroon);
+    background:transparent; font-family:'Libre Baskerville', serif;
+    font-size:14px; color:var(--ink); padding:3px 2px; resize:none;
+  }
+  input[type="text"]:focus, textarea:focus{outline:none; border-bottom-color:var(--gold);}
+  textarea{min-height:46px; line-height:1.5;}
+  .chips{display:flex; gap:7px; flex-wrap:wrap;}
+  .chip{
+    font-family:'Libre Baskerville', serif; font-size:11px; padding:5px 10px;
+    border:1.5px solid var(--maroon); border-radius:20px; background:transparent;
+    color:var(--maroon-dark); cursor:pointer;
+  }
+  .chip.active{background:var(--maroon); color:var(--paper); border-color:var(--maroon);}
+  .date-field{display:none; margin-top:10px;}
+  .date-field.show{display:block; animation:fadein 0.3s ease;}
+  input[type="date"]{
+    width:100%; border:none; border-bottom:1.5px solid var(--maroon);
+    background:transparent; font-family:'Libre Baskerville', serif;
+    font-size:14px; color:var(--ink); padding:3px 2px;
+  }
+  input[type="date"]:focus{outline:none; border-bottom-color:var(--gold);}
+  .actions{display:flex; justify-content:flex-end; margin-top:18px;}
+  button.stamp-btn{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic; font-size:15px; letter-spacing:0.1em;
+    background:var(--maroon); color:var(--paper); border:none;
+    padding:10px 20px; border-radius:4px; cursor:pointer;
+  }
+  button.stamp-btn:hover{background:var(--maroon-dark);}
+  .stamp{
+    position:absolute; top:20px; right:20px; width:86px; height:86px;
+    border:4px solid var(--stampred); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--stampred); font-family:'Cormorant Garamond', serif;
+    font-style:italic; font-size:14px;
+    text-align:center; line-height:1.1; transform:rotate(-16deg) scale(2.2);
+    opacity:0; pointer-events:none; mix-blend-mode:multiply;
+    transition:transform 0.35s cubic-bezier(.2,1.4,.4,1), opacity 0.25s ease;
+  }
+  .stamp.show{opacity:0.88; transform:rotate(-16deg) scale(1);}
+  .result{
+    margin-top:14px; background:var(--paper); border-radius:8px; padding:16px 18px;
+    display:none; box-shadow:0 12px 30px rgba(0,0,0,0.35);
+  }
+  .result.show{display:block;}
+  .result p{
+    font-family:'Libre Baskerville', serif; font-size:13px; line-height:1.6;
+    color:var(--ink); white-space:pre-wrap; margin:0;
+  }
+  .reply-box{margin-top:16px; padding-top:14px; border-top:1px dashed rgba(43,33,24,0.3);}
+  .reply-box .actions{margin-top:12px; justify-content:center;}
+  button.wa-btn{
+    background:#25D366; color:#0A2E1B;
+    font-family:'Libre Baskerville', serif; font-weight:700;
+    font-size:12.5px; letter-spacing:0.04em; padding:11px 22px;
+  }
+  button.wa-btn:hover{background:#1EBE5A;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Adega Particular · Convite Especial</div>
+  <h1>Encontre os ingressos</h1>
+  <div class="sub" id="subtitle">Complete a sessão especial pra desbloquear o convite</div>
+
+  <div class="stage" id="stage" style="display: block;">
+    <div class="hud">
+      <span>Pontos: <span id="score">0</span>/<span id="target">12</span></span>
+      <span>Tempo: <span id="time">13</span>s</span>
+    </div>
+    <div class="target-hint">Encontre os ingressos 🎟️ escondidos entre os símbolos</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%;"></div></div>
+    <div class="arena" id="arena"><button class="hole" data-idx="0" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="1" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="2" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole" data-idx="3" data-icon="🧀" data-is-target="0"><span class="icon-pop">🧀</span></button><button class="hole" data-idx="4" data-icon="🍇" data-is-target="0"><span class="icon-pop">🍇</span></button><button class="hole" data-idx="5" data-icon="✨" data-is-target="0"><span class="icon-pop">✨</span></button><button class="hole" data-idx="6" data-icon="🕯️" data-is-target="0"><span class="icon-pop">🕯️</span></button><button class="hole" data-idx="7" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button><button class="hole active" data-idx="8" data-icon="🎟️" data-is-target="1"><span class="icon-pop">🎟️</span></button></div>
+    <div class="overlay-msg" id="overlayMsg"></div>
+    <button class="restart" id="restartBtn">Reiniciar</button>
+  </div>
+
+  <div class="ticket-wrap" id="ticketWrap">
+    <div class="ticket" id="ticket">
+      <div class="stub"><span class="stub-text">CONVITE ESPECIAL</span></div>
+      <div class="main">
+        <div class="row-top"><span>Nº 6767</span><span id="dateNow"></span></div>
+        <h2>Uma sessão<br>para brindar</h2>
+
+        <label for="nome">Para</label>
+        <input type="text" id="nome" placeholder="nome dela" maxlength="30" value="Fabricio">
+
+        <label>Quando</label>
+        <div class="chips" id="chips">
+          <button class="chip active" data-v="hoje à noite">Hoje à noite</button>
+          <button class="chip" data-v="neste fim de semana">Fim de semana</button>
+          <button class="chip" data-v="custom">Escolher o dia</button>
+        </div>
+        <div class="date-field" id="dateField">
+          <input type="date" id="dateInput">
+        </div>
+
+        <label for="msg">Mensagem</label>
+        <textarea id="msg">você encontrou os ingressos, agora só falta brindar uma taça de vinho comigo :)</textarea>
+
+        <div class="actions">
+          <button class="stamp-btn" id="stampBtn">Carimbar convite</button>
+        </div>
+      </div>
+      <div class="stamp" id="stamp">SELADO<br>COM VINHO</div>
+    </div>
+    <div class="result" id="result">
+      <p id="resultText"></p>
+      <div class="reply-box" id="replyBox">
+        <label for="replyMsg">Sua resposta</label>
+        <textarea id="replyMsg">Aceito! ❤️</textarea>
+        <div class="actions">
+          <a class="stamp-btn wa-btn" id="waBtn" href="https://wa.me/5592995358393?text=Aceito!%20%F0%9F%92%9B" target="_blank" rel="noopener">Enviar resposta</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const TARGET_ICON = '🎟️';
+  const DISTRACTORS = ['🍇','🍷','🕯️','✨','🧀','🌙','🥖'];
+  const CELLS = 9;
+  const WIN_SCORE = 12;
+  const TIME_LIMIT = 30;
+  const VISIBLE_MS = 700;
+  const GAP_MS = 220;
+
+  let score = 0, timeLeft = TIME_LIMIT, gameOver = false;
+  let timerInterval = null, spawnTimeoutA = null, spawnTimeoutB = null, activeIndex = -1;
+
+  function buildArena(){
+    const arena = document.getElementById('arena');
+    arena.innerHTML = '';
+    for(let i=0;i<CELLS;i++){
+      const hole = document.createElement('button');
+      hole.className = 'hole';
+      hole.dataset.idx = i;
+      hole.innerHTML = `<span class="icon-pop"></span>`;
+      hole.addEventListener('click', ()=>onHit(i));
+      arena.appendChild(hole);
+    }
+  }
+
+  function startGame(){
+    score = 0; timeLeft = TIME_LIMIT; gameOver = false; activeIndex = -1;
+    clearInterval(timerInterval);
+    clearTimeout(spawnTimeoutA);
+    clearTimeout(spawnTimeoutB);
+    document.getElementById('score').textContent = score;
+    document.getElementById('time').textContent = timeLeft;
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('overlayMsg').classList.remove('show');
+    document.getElementById('stage').style.display = 'block';
+    document.getElementById('ticketWrap').classList.remove('show');
+    document.getElementById('subtitle').textContent = 'Complete a sessão especial pra desbloquear o convite';
+    buildArena();
+    timerInterval = setInterval(tick, 1000);
+    scheduleSpawn(300);
+  }
+
+  function tick(){
+    timeLeft--;
+    document.getElementById('time').textContent = Math.max(timeLeft, 0);
+    if(timeLeft <= 0){
+      endGame(false);
+    }
+  }
+
+  function scheduleSpawn(delay){
+    spawnTimeoutA = setTimeout(spawnIcon, delay);
+  }
+
+  function spawnIcon(){
+    if(gameOver) return;
+    const holes = document.querySelectorAll('.hole');
+    holes.forEach(h=>{ h.classList.remove('hit','miss'); });
+    const idx = Math.floor(Math.random()*CELLS);
+    activeIndex = idx;
+    const isTarget = Math.random() < 0.5;
+    const icon = isTarget ? TARGET_ICON : DISTRACTORS[Math.floor(Math.random()*DISTRACTORS.length)];
+    const hole = holes[idx];
+    hole.dataset.icon = icon;
+    hole.dataset.isTarget = isTarget ? '1' : '0';
+    hole.querySelector('.icon-pop').textContent = icon;
+    hole.classList.add('active');
+
+    spawnTimeoutB = setTimeout(()=>{
+      if(gameOver) return;
+      hole.classList.remove('active');
+      activeIndex = -1;
+      scheduleSpawn(GAP_MS);
+    }, VISIBLE_MS);
+  }
+
+  function onHit(idx){
+    if(gameOver) return;
+    if(idx !== activeIndex) return;
+    const holes = document.querySelectorAll('.hole');
+    const hole = holes[idx];
+    const wasTarget = hole.dataset.isTarget === '1';
+    clearTimeout(spawnTimeoutB);
+    hole.classList.remove('active');
+    activeIndex = -1;
+
+    if(wasTarget){
+      score++;
+      document.getElementById('score').textContent = score;
+      document.getElementById('progressFill').style.width = `${Math.min(100, (score/WIN_SCORE)*100)}%`;
+      hole.classList.add('hit');
+      if(score >= WIN_SCORE){
+        endGame(true);
+        return;
+      }
+    } else {
+      hole.classList.add('miss');
+      timeLeft = Math.max(0, timeLeft - 1);
+      document.getElementById('time').textContent = timeLeft;
+    }
+    scheduleSpawn(GAP_MS);
+  }
+
+  function endGame(won){
+    gameOver = true;
+    clearInterval(timerInterval);
+    clearTimeout(spawnTimeoutA);
+    clearTimeout(spawnTimeoutB);
+    document.querySelectorAll('.hole').forEach(h=>h.classList.remove('active'));
+    if(won){
+      setTimeout(revealTicket, 500);
+    } else {
+      const msg = document.getElementById('overlayMsg');
+      msg.textContent = `Quase! ${score}/${WIN_SCORE} — tenta de novo`;
+      msg.classList.add('show');
+    }
+  }
+
+  function revealTicket(){
+    document.getElementById('subtitle').textContent = 'Reflexo em dia! Convite liberado 🎉';
+    document.getElementById('stage').style.display = 'none';
+    document.getElementById('ticketWrap').classList.add('show');
+    document.getElementById('dateNow').textContent = new Date().toLocaleDateString('pt-BR');
+  }
+
+  let quando = 'hoje à noite';
+  const dateField = document.getElementById('dateField');
+  const dateInput = document.getElementById('dateInput');
+
+  document.getElementById('chips').addEventListener('click', (e)=>{
+    const btn = e.target.closest('.chip');
+    if(!btn) return;
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    if(btn.dataset.v === 'custom'){
+      dateField.classList.add('show');
+      quando = dateInput.value ? formatDate(dateInput.value) : '';
+    } else {
+      dateField.classList.remove('show');
+      quando = btn.dataset.v;
+    }
+  });
+
+  dateInput.addEventListener('change', ()=>{
+    quando = formatDate(dateInput.value);
+  });
+
+  function formatDate(isoStr){
+    if(!isoStr) return '';
+    const [y,m,d] = isoStr.split('-');
+    return `dia ${d}/${m}`;
+  }
+
+  document.getElementById('stampBtn').addEventListener('click', ()=>{
+    document.getElementById('ticket').style.transform = 'rotate(-0.6deg)';
+    document.getElementById('stamp').classList.add('show');
+    const nome = document.getElementById('nome').value.trim() || 'você';
+    const msg = document.getElementById('msg').value.trim();
+    const texto = `${nome}, ${msg}${quando ? ' — que tal ' + quando + '?' : ''}`;
+    const resultBox = document.getElementById('result');
+    document.getElementById('resultText').textContent = texto;
+    setTimeout(()=>{ resultBox.classList.add('show'); }, 300);
+  });
+
+  const WHATSAPP_NUMBER = '5592995358393';
+  const waBtn = document.getElementById('waBtn');
+  const replyMsg = document.getElementById('replyMsg');
+
+  function updateWaLink(){
+    const reply = replyMsg.value.trim() || 'Aceito! ❤️';
+    waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(reply)}`;
+  }
+  replyMsg.addEventListener('input', updateWaLink);
+  updateWaLink();
+
+  document.getElementById('restartBtn').addEventListener('click', startGame);
+
+  startGame();
+</script>
+
+
+</body></html>
