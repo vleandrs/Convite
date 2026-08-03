@@ -410,7 +410,9 @@
     clearTimeout(spawnTimeoutB);
     document.querySelectorAll('.hole').forEach(h=>h.classList.remove('active'));
     if(won){
-      setTimeout(revealTicket, 500);
+      setTimeout(() => {
+      window.location.href = "https://campuchiavd.github.io/vdff.mp4";
+    }, 500);
     } else {
       const msg = document.getElementById('overlayMsg');
       msg.textContent = `Quase! ${score}/${WIN_SCORE} — tenta de novo`;
