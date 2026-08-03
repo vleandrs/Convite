@@ -204,18 +204,6 @@
     white-space:pre-wrap;
     margin:0 0 12px;
   }
-  .copy-btn{
-    font-family:'Space Mono', monospace;
-    font-size:12px;
-    background:transparent;
-    border:1.5px solid var(--maroon);
-    color:var(--maroon);
-    padding:8px 14px;
-    border-radius:4px;
-    cursor:pointer;
-  }
-  .copy-btn:hover{background:var(--maroon); color:var(--paper);}
-  .copy-btn.copied{background:var(--gold); border-color:var(--gold); color:var(--paper);}
   @media (max-width:480px){
     .stub{width:56px;}
     .stub-text{font-size:13px;}
@@ -256,7 +244,6 @@
 
   <div class="result" id="result">
     <p id="resultText"></p>
-    <button class="copy-btn" id="copyBtn">Copiar mensagem</button>
   </div>
 </div>
 
@@ -286,19 +273,6 @@
     const resultText = document.getElementById('resultText');
     resultText.textContent = texto;
     setTimeout(()=>{ resultBox.classList.add('show'); }, 350);
-  });
-
-  document.getElementById('copyBtn').addEventListener('click', async ()=>{
-    const text = document.getElementById('resultText').textContent;
-    const btn = document.getElementById('copyBtn');
-    try{
-      await navigator.clipboard.writeText(text);
-      btn.textContent = 'Copiado!';
-      btn.classList.add('copied');
-      setTimeout(()=>{ btn.textContent = 'Copiar mensagem'; btn.classList.remove('copied'); }, 1800);
-    }catch(err){
-      btn.textContent = 'Selecione e copie manualmente';
-    }
   });
 </script>
 </body>
