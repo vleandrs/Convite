@@ -473,7 +473,7 @@
   const replyMsg = document.getElementById('replyMsg');
 
   function updateWaLink(){
-    const reply = replyMsg.value.trim() || 'Aceito! \u2764\uFE0F';
+    const reply = replyMsg.value.trim() || 'Aceito! ❤️\u2764\uFE0F';
     const diaInfo = quando ? ` — bora ${quando}!` : '';
     waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(reply + diaInfo)}`;
   }
