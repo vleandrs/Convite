@@ -192,6 +192,14 @@
     color:var(--maroon-dark); cursor:pointer;
   }
   .chip.active{background:var(--maroon); color:var(--paper); border-color:var(--maroon);}
+  .date-field{display:none; margin-top:10px;}
+  .date-field.show{display:block; animation:fadein 0.3s ease;}
+  input[type="date"]{
+    width:100%; border:none; border-bottom:1.5px solid var(--maroon);
+    background:transparent; font-family:'Libre Baskerville', serif;
+    font-size:14px; color:var(--ink); padding:3px 2px;
+  }
+  input[type="date"]:focus{outline:none; border-bottom-color:var(--gold);}
   .actions{display:flex; justify-content:flex-end; margin-top:18px;}
   button.stamp-btn{
     font-family:'Bebas Neue', sans-serif; font-size:15px; letter-spacing:0.1em;
@@ -217,6 +225,18 @@
   .result p{
     font-family:'Libre Baskerville', serif; font-size:13px; line-height:1.6;
     color:var(--ink); white-space:pre-wrap; margin:0;
+  }
+  .reply-box{margin-top:16px; padding-top:14px; border-top:1px dashed rgba(43,33,24,0.3);}
+  .reply-box .actions{margin-top:12px; justify-content:center;}
+  button.wa-btn{
+    background:#25D366; color:#0A2E1B;
+    font-family:'Space Mono', monospace; font-weight:700;
+    font-size:12.5px; letter-spacing:0.04em; padding:11px 22px;
+  }
+  button.wa-btn:hover{background:#1EBE5A;}
+  .wa-sent{
+    text-align:center; font-family:'Space Mono', monospace; font-size:11px;
+    color:var(--maroon-dark); margin-top:8px; opacity:0.75;
   }
 </style>
 </head>
@@ -249,6 +269,10 @@
         <div class="chips" id="chips">
           <button class="chip active" data-v="hoje à noite">Hoje à noite</button>
           <button class="chip" data-v="neste fim de semana">Fim de semana</button>
+          <button class="chip" data-v="custom">Escolher o dia</button>
+        </div>
+        <div class="date-field" id="dateField">
+          <input type="date" id="dateInput">
         </div>
 
         <label for="msg">Mensagem</label>
@@ -260,7 +284,16 @@
       </div>
       <div class="stamp" id="stamp">CONFIRMADO</div>
     </div>
-    <div class="result" id="result"><p id="resultText"></p></div>
+    <div class="result" id="result">
+      <p id="resultText"></p>
+      <div class="reply-box" id="replyBox">
+        <label for="replyMsg">Sua resposta</label>
+        <textarea id="replyMsg">Aceito! 💛</textarea>
+        <div class="actions">
+          <a class="stamp-btn wa-btn" id="waBtn" href="#" target="_blank" rel="noopener">Enviar resposta</a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -336,13 +369,32 @@
   }
 
   let quando = 'hoje à noite';
+  const dateField = document.getElementById('dateField');
+  const dateInput = document.getElementById('dateInput');
+
   document.getElementById('chips').addEventListener('click', (e)=>{
     const btn = e.target.closest('.chip');
     if(!btn) return;
     document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
     btn.classList.add('active');
-    quando = btn.dataset.v;
+    if(btn.dataset.v === 'custom'){
+      dateField.classList.add('show');
+      quando = dateInput.value ? formatDate(dateInput.value) : '';
+    } else {
+      dateField.classList.remove('show');
+      quando = btn.dataset.v;
+    }
   });
+
+  dateInput.addEventListener('change', ()=>{
+    quando = formatDate(dateInput.value);
+  });
+
+  function formatDate(isoStr){
+    if(!isoStr) return '';
+    const [y,m,d] = isoStr.split('-');
+    return `dia ${d}/${m}`;
+  }
 
   document.getElementById('stampBtn').addEventListener('click', ()=>{
     document.getElementById('ticket').style.transform = 'rotate(-0.6deg)';
@@ -354,6 +406,17 @@
     document.getElementById('resultText').textContent = texto;
     setTimeout(()=>{ resultBox.classList.add('show'); }, 300);
   });
+
+  const WHATSAPP_NUMBER = '5592995358393';
+  const waBtn = document.getElementById('waBtn');
+  const replyMsg = document.getElementById('replyMsg');
+
+  function updateWaLink(){
+    const reply = replyMsg.value.trim() || 'Aceito! 💛';
+    waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(reply)}`;
+  }
+  replyMsg.addEventListener('input', updateWaLink);
+  updateWaLink();
 
   document.getElementById('restartBtn').addEventListener('click', buildGrid);
 
