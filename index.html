@@ -292,7 +292,7 @@
       <p id="resultText"></p>
       <div class="reply-box" id="replyBox">
         <label for="replyMsg">Sua resposta</label>
-        <textarea id="replyMsg">Aceito! &#10084;&#65039;</textarea>
+        <textarea id="replyMsg">Aceito! ❤&#10084;&#65039;</textarea>
         <div class="actions">
           <a class="stamp-btn wa-btn" id="waBtn" href="#" target="_blank" rel="noopener">Enviar resposta</a>
         </div>
@@ -476,7 +476,7 @@
   const replyMsg = document.getElementById('replyMsg');
 
   function updateWaLink(){
-    const reply = replyMsg.value.trim() || 'Aceito! \u2764\uFE0F';
+    const reply = replyMsg.value.trim() || 'Aceito! ❤\u2764\uFE0F';
     const diaInfo = quando ? ` — bora ${quando}!` : '';
     waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(reply + diaInfo)}`;
   }
